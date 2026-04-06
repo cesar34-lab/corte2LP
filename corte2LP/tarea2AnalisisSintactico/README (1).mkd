@@ -1,0 +1,179 @@
+
+# Comparación de Algoritmos CYK vs ANTLR4
+## Análisis Sintáctico – Lenguajes de Programación y Transducción
+
+---
+
+# 1. Introducción
+Este proyecto tiene como objetivo comparar el algoritmo de análisis sintáctico CYK (Cocke–Younger–Kasami) con un parser generado mediante ANTLR4, evaluando su desempeño en tiempo de ejecución y uso de memoria para el reconocimiento de expresiones aritméticas.
+
+El análisis sintáctico es una fase fundamental en la construcción de compiladores y procesadores de lenguaje, donde se verifica si una cadena pertenece a una gramática libre de contexto.
+
+---
+
+# 2. Marco Teórico
+
+## 2.1 Gramáticas Libres de Contexto
+Una gramática libre de contexto (CFG) se define como:
+
+G = (V, Σ, R, S)
+
+Donde:
+- V: variables o no terminales
+- Σ: terminales
+- R: reglas de producción
+- S: símbolo inicial
+
+Estas gramáticas son utilizadas en compiladores para definir la sintaxis de los lenguajes de programación.
+
+---
+
+## 2.2 Forma Normal de Chomsky (CNF)
+El algoritmo CYK requiere que la gramática esté en Forma Normal de Chomsky, donde las producciones solo pueden ser:
+
+A -> BC  
+A -> a  
+
+Esto permite aplicar programación dinámica para el reconocimiento de cadenas.
+
+---
+
+## 2.3 Algoritmo CYK
+El algoritmo CYK es un algoritmo de parsing bottom-up que utiliza programación dinámica y una tabla triangular de tamaño n × n.
+
+### Complejidades
+| Métrica | Complejidad |
+|--------|-------------|
+| Tiempo | O(n³) |
+| Memoria | O(n²) |
+
+El algoritmo verifica si una cadena pertenece a una gramática libre de contexto en CNF.
+
+---
+
+## 2.4 ANTLR
+ANTLR es una herramienta generadora de parsers que utiliza análisis sintáctico top-down LL(*).
+
+### Características
+- Genera lexer y parser automáticamente
+- Construye árbol sintáctico
+- Complejidad cercana a O(n)
+- Usado en compiladores reales
+
+---
+
+# 3. Metodología
+Para la comparación se implementaron:
+
+1. Parser CYK en Python
+2. Parser generado con ANTLR4
+3. Medición de tiempo de ejecución
+4. Medición de uso de memoria
+5. Generación de gráficas comparativas
+
+Las pruebas se realizaron con cadenas de expresiones aritméticas como:
+
+1+5  
+1+2+3  
+1*2+3  
+
+---
+
+# 4. Resultados Experimentales
+
+## 4.1 Comparación de Tiempo de Ejecución
+La gráfica de tiempo de ejecución muestra la comparación entre el algoritmo CYK y ANTLR.
+
+Para cadenas pequeñas, CYK presenta menor tiempo de ejecución que ANTLR. Esto se debe a que ANTLR realiza análisis léxico, generación de tokens y construcción del árbol sintáctico, lo que introduce sobrecarga adicional.
+
+---
+
+## 4.2 Comparación de Uso de Memoria
+La gráfica de memoria muestra que ANTLR consume más memoria que CYK.
+
+ANTLR crea:
+- Tokens
+- Árbol sintáctico
+- Objetos del runtime
+- Estructuras del parser
+
+Mientras que CYK solo utiliza una tabla de programación dinámica.
+
+---
+
+# 5. Análisis de Resultados
+
+Aunque experimentalmente CYK parece más rápido para cadenas pequeñas, teóricamente:
+
+| Algoritmo | Tiempo | Memoria | Complejidad |
+|-----------|--------|---------|-------------|
+| CYK | Bajo (cadenas pequeñas) | Bajo | O(n³) |
+| ANTLR | Mayor overhead | Mayor | O(n) |
+
+Cuando el tamaño de la cadena aumenta:
+- CYK crece cúbicamente
+- ANTLR crece linealmente
+
+Por lo tanto, para cadenas grandes ANTLR será más eficiente.
+
+---
+
+# 6. Comparación General
+
+| Característica | CYK | ANTLR |
+|----------------|-----|-------|
+| Tipo parser | Bottom-Up | Top-Down |
+| Técnica | Programación dinámica | LL(*) |
+| Gramática | CNF | CFG |
+| Complejidad tiempo | O(n³) | O(n) |
+| Complejidad memoria | O(n²) | O(n) |
+| Uso | Teórico | Compiladores reales |
+
+---
+
+# 7. Conclusiones
+Se implementó el algoritmo CYK y se comparó con un parser generado mediante ANTLR4 para el análisis sintáctico de expresiones aritméticas.
+
+Los resultados muestran que:
+- CYK puede ser más rápido en cadenas pequeñas.
+- ANTLR consume más memoria debido a la construcción del árbol sintáctico.
+- Teóricamente CYK tiene complejidad O(n³).
+- ANTLR tiene complejidad cercana a O(n).
+- Para cadenas grandes, ANTLR será más eficiente en tiempo de ejecución.
+
+Se concluye que CYK es útil para análisis teórico y reconocimiento general de gramáticas libres de contexto, mientras que ANTLR es más adecuado para la construcción de compiladores y lenguajes de programación reales.
+
+---
+
+# 8. Cómo Ejecutar el Proyecto
+
+## Generar parser ANTLR
+antlr4 -Dlanguage=Python3 Expr.g4
+
+## Ejecutar CYK
+python3 cyk_parser.py grammar.txt cadena.txt
+
+## Ejecutar ANTLR
+python3 antlr_parser.py Expr.g4 cadena.txt
+
+## Ejecutar Comparación
+python3 main_compare.py
+
+## Generar Gráficas
+python3 plot_results.py
+
+---
+
+# 9. Estructura del Proyecto
+Expr.g4  
+ExprLexer.py  
+ExprParser.py  
+antlr_parser.py  
+cyk_parser.py  
+grammar.txt  
+cadena.txt  
+main_compare.py  
+benchmark.py  
+plot_results.py  
+string_generator.py  
+README.mkd  

@@ -1,0 +1,19 @@
+# Gramatica para expresiones booleanas
+# Las palabras reservadas deben ir ANTES que ID en el lexer
+
+bool_expr   -> bool_term bool_expr_r
+bool_expr_r -> OR bool_term bool_expr_r | eps
+bool_term   -> bool_factor bool_term_r
+bool_term_r -> AND bool_factor bool_term_r | eps
+bool_factor -> NOT bool_factor | TRUE | FALSE | ID
+
+[lexer]
+TRUE       : true
+FALSE      : false
+AND        : and
+OR         : or
+NOT        : not
+ID         : [a-zA-Z_][a-zA-Z0-9_]*
+WHITESPACE : \s+
+
+cadena_raw: true and false or not true

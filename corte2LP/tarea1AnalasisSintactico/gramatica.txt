@@ -1,0 +1,9 @@
+# Gramatica LL(1) para expresiones aritmeticas
+
+expr    -> term expr_r
+expr_r  -> PLUS term expr_r | MINUS term expr_r | eps
+term    -> factor term_r
+term_r  -> TIMES factor term_r | DIVIDE factor term_r | eps
+factor  -> LPAREN expr RPAREN | NUMBER | ID
+
+cadena_raw: resultado + 3 * (x - 2)

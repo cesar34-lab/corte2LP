@@ -1,0 +1,8 @@
+# Gramatica para listas entre corchetes
+
+lista     -> LBRACKET contenido RBRACKET
+contenido -> elemento resto | eps
+resto     -> COMMA elemento resto | eps
+elemento  -> NUMBER | ID | STRING
+
+cadena_raw: [ 10 , holaComoEstas , "texto" ]

@@ -1,0 +1,44 @@
+Texto original   : resultado + 3 * (x - 2)
+Tokens generados : ID PLUS NUMBER TIMES LPAREN ID MINUS NUMBER RPAREN
+
+ARBOL DE SINTAXIS ABSTRACTA (AST)
+============================================================
+└── expr
+    ├── term
+    │   ├── factor
+    │   │   └── ID
+    │   └── term_r
+    │       └── eps
+    └── expr_r
+        ├── PLUS
+        ├── term
+        │   ├── factor
+        │   │   └── NUMBER
+        │   └── term_r
+        │       ├── TIMES
+        │       ├── factor
+        │       │   ├── LPAREN
+        │       │   ├── expr
+        │       │   │   ├── term
+        │       │   │   │   ├── factor
+        │       │   │   │   │   └── ID
+        │       │   │   │   └── term_r
+        │       │   │   │       └── eps
+        │       │   │   └── expr_r
+        │       │   │       ├── MINUS
+        │       │   │       ├── term
+        │       │   │       │   ├── factor
+        │       │   │       │   │   └── NUMBER
+        │       │   │       │   └── term_r
+        │       │   │       │       └── eps
+        │       │   │       └── expr_r
+        │       │   │           └── eps
+        │       │   └── RPAREN
+        │       └── term_r
+        │           └── eps
+        └── expr_r
+            └── eps
+
+CADENA GENERADA POR EL ARBOL
+============================================================
+ID PLUS NUMBER TIMES LPAREN ID MINUS NUMBER RPAREN

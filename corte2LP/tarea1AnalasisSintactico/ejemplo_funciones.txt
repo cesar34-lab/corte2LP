@@ -1,0 +1,17 @@
+# Gramatica para llamadas a funcion con lexer personalizado
+
+llamada    -> ID LPAREN argumentos RPAREN
+argumentos -> argumento resto | eps
+resto      -> COMMA argumento resto | eps
+argumento  -> ID | NUMBER | STRING
+
+[lexer]
+STRING     : "[^"]*"
+NUMBER     : \d+(\.\d+)?
+ID         : [a-zA-Z_][a-zA-Z0-9_]*
+LPAREN     : \(
+RPAREN     : \)
+COMMA      : ,
+WHITESPACE : \s+
+
+cadena_raw: calcularTotal(precioBase, 12, "descuento")

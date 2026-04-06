@@ -1,23 +1,42 @@
 # Análisis de Asociatividad, Precedencia y Ambigüedad en Gramáticas
 
-## Descripción
+## 1. Problema
 
-Este proyecto implementa un analizador sintáctico en Python capaz de:
+El objetivo de este proyecto es analizar diferentes gramáticas libres de contexto para determinar:
 
-* Leer una gramática desde un archivo `entrada.txt`
-* Generar árboles de derivación para cadenas de prueba
-* Detectar ambigüedad en la gramática
-* Determinar asociatividad (izquierda o derecha)
-* Determinar precedencia de operadores
-* Mostrar los árboles sintácticos generados
+* Asociatividad de operadores
+* Precedencia de operadores
+* Ambigüedad de la gramática
+* Número de árboles de derivación generados para una cadena
 
-El objetivo del proyecto es demostrar computacionalmente la asociatividad, precedencia y ambigüedad de diferentes gramáticas libres de contexto.
+Se deben probar varias gramáticas:
+
+* Gramática con recursividad por la izquierda
+* Gramática con recursividad por la derecha
+* Gramática ambigua
+* Verificar precedencia y asociatividad mediante árboles sintácticos
+
+El análisis se realiza generando todos los árboles de derivación posibles para una cadena y verificando si existe más de uno.
 
 ---
 
-## Estructura del Proyecto
+## 2. Descripción General del Proyecto
 
-```
+El programa implementa un analizador sintáctico que:
+
+1. Lee una gramática desde un archivo `entrada.txt`
+2. Lee cadenas de prueba
+3. Genera todos los árboles sintácticos posibles
+4. Determina si la gramática es ambigua
+5. Determina la asociatividad
+6. Determina la precedencia de operadores
+7. Imprime los árboles generados
+
+---
+
+## 3. Estructura del Proyecto
+
+```id="estructura_proyecto"
 tarea3AnalisisSintactico/
 │
 ├── main.py
@@ -28,178 +47,94 @@ tarea3AnalisisSintactico/
 └── README.mkd
 ```
 
----
+### Descripción de archivos
 
-## Formato del Archivo entrada.txt
-
-El archivo debe contener primero la gramática y luego las cadenas de prueba.
-
-### Ejemplo
-
-```
-E -> E + T
-E -> T
-T -> T * F
-T -> F
-F -> id
-
-id + id + id
-id + id * id
-id * id + id
-```
-
-Primero van las producciones y luego las cadenas a analizar.
+| Archivo     | Descripción                                     |
+| ----------- | ----------------------------------------------- |
+| main.py     | Programa principal                              |
+| grammar.py  | Carga y almacena la gramática                   |
+| parser.py   | Genera los árboles de derivación                |
+| analyzer.py | Analiza ambigüedad, precedencia y asociatividad |
+| entrada.txt | Gramática y cadenas de prueba                   |
+| README.mkd  | Documentación                                   |
 
 ---
 
-## Gramáticas Analizadas
+## 4. Explicación del Código
 
-### 1. Gramática con Recursividad por la Izquierda
+### grammar.py
 
+Este módulo se encarga de:
+
+* Leer la gramática desde el archivo
+* Separar producciones
+* Identificar terminales y no terminales
+* Almacenar las reglas en estructuras de datos
+
+La gramática se almacena como un diccionario:
+
+```id="diccionario_gramatica"
+{
+  "E": [["E","+","T"], ["T"]],
+  "T": [["T","*","F"], ["F"]],
+  "F": [["id"]]
+}
 ```
-E -> E + T
-E -> T
-T -> T * F
-T -> F
-F -> id
-```
-
-**Resultados**
-
-* Asociatividad: Izquierda
-* Precedencia: * tiene mayor precedencia que +
-* Ambigüedad: No ambigua
-* Solo genera un árbol por cadena
-
-**Ejemplo**
-
-```
-id + id + id
-⇒ (id + id) + id
-```
-
-Esto demuestra asociatividad izquierda.
 
 ---
 
-### 2. Gramática con Recursividad por la Derecha
+### parser.py
 
-```
-E -> T + E
-E -> T
-T -> F * T
-T -> F
-F -> id
-```
+Este módulo genera los árboles sintácticos.
 
-**Resultados**
+El algoritmo:
 
-* Asociatividad: Derecha
-* Precedencia: * > +
-* Ambigüedad: No ambigua
+1. Toma un símbolo inicial
+2. Expande usando las producciones
+3. Intenta derivar la cadena objetivo
+4. Guarda todos los árboles posibles
+5. Si hay más de un árbol → la gramática es ambigua
 
-**Ejemplo**
-
-```
-id + id + id
-⇒ id + (id + id)
-```
-
-Esto demuestra asociatividad derecha.
+Se usa recursión para generar los árboles de derivación.
 
 ---
 
-### 3. Gramática Ambigua
+### analyzer.py
+
+Este módulo determina:
+
+#### Ambigüedad
+
+Si el número de árboles de derivación es mayor que 1:
 
 ```
-E -> E + E
-E -> E * E
-E -> id
+La gramática es ambigua
 ```
 
-**Resultados**
+#### Asociatividad
 
-* Se generan múltiples árboles de derivación
-* La gramática es ambigua
-* No define precedencia
-* No define asociatividad claramente
-
-**Ejemplo**
+Se analiza la cadena:
 
 ```
 id + id + id
 ```
 
-Puede derivarse como:
-
-```
-(id + id) + id
-```
-
-o
-
-```
-id + (id + id)
-```
-
-Por lo tanto la gramática es ambigua.
-
----
-
-## Cómo Ejecutar el Programa
-
-Desde la terminal:
-
-```
-python3 main.py entrada.txt
-```
-
-El programa mostrará:
-
-* Gramática cargada
-* Cadena analizada
-* Número de árboles de derivación
-* Si la gramática es ambigua
-* Asociatividad detectada
-* Precedencia detectada
-* Árboles sintácticos
-
----
-
-## Interpretación de Resultados
-
-### Ambigüedad
-
-Una gramática es ambigua si:
-
-```
-Número de parse trees > 1
-```
-
-### Asociatividad
-
-Se analiza con la cadena:
-
-```
-id + id + id
-```
-
-Si el árbol agrupa:
+Si el árbol agrupa como:
 
 ```
 (id + id) + id → Asociatividad izquierda
 id + (id + id) → Asociatividad derecha
 ```
 
-### Precedencia
+#### Precedencia
 
-Se analiza con:
+Se analiza la cadena:
 
 ```
 id + id * id
 ```
 
-Si el árbol agrupa:
+Si el árbol agrupa como:
 
 ```
 id + (id * id)
@@ -213,35 +148,120 @@ Entonces:
 
 ---
 
-## Conclusiones
+## 5. Formato del Archivo entrada.txt
+
+Ejemplo:
+
+```id="ejemplo_entrada"
+E -> E + T
+E -> T
+T -> T * F
+T -> F
+F -> id
+
+id + id + id
+id + id * id
+id * id + id
+```
+
+Primero se escribe la gramática y luego las cadenas a evaluar.
+
+---
+
+## 6. Cómo Ejecutar el Programa
+
+Desde la terminal:
+
+```id="ejecutar_programa"
+python3 main.py entrada.txt
+```
+
+El programa mostrará:
+
+* Gramática cargada
+* Cadena evaluada
+* Número de árboles de derivación
+* Si la gramática es ambigua
+* Asociatividad
+* Precedencia
+* Árboles sintácticos
+
+---
+
+## 7. Resultados Esperados
+
+### Gramática Recursiva Izquierda
+
+```
+E -> E + T
+E -> T
+T -> T * F
+T -> F
+F -> id
+```
+
+Resultado:
+
+* Asociatividad izquierda
+* Precedencia * > +
+* Gramática no ambigua
+
+---
+
+### Gramática Recursiva Derecha
+
+```
+E -> T + E
+E -> T
+T -> F * T
+T -> F
+F -> id
+```
+
+Resultado:
+
+* Asociatividad derecha
+* Precedencia * > +
+* Gramática no ambigua
+
+---
+
+### Gramática Ambigua
+
+```
+E -> E + E
+E -> E * E
+E -> id
+```
+
+Resultado:
+
+* Gramática ambigua
+* Múltiples árboles de derivación
+* No define precedencia ni asociatividad
+
+---
+
+## 8. Conclusiones
 
 1. La recursividad por la izquierda produce asociatividad izquierda.
 2. La recursividad por la derecha produce asociatividad derecha.
-3. La precedencia se define separando la gramática en niveles (E, T, F).
-4. Las gramáticas del tipo:
-
-   ```
-   E -> E + E | E * E | id
-   ```
-
-   son ambiguas.
-5. La ambigüedad se detecta cuando existen múltiples árboles de derivación para la misma cadena.
-6. La estructura del árbol sintáctico permite determinar precedencia y asociatividad.
+3. La precedencia de operadores se define separando la gramática en niveles.
+4. Una gramática es ambigua si una cadena puede generar más de un árbol de derivación.
+5. La ambigüedad ocurre cuando la gramática no define precedencia ni asociatividad.
+6. Los árboles sintácticos permiten analizar la estructura de las expresiones.
+7. Este proyecto demuestra computacionalmente la ambigüedad, precedencia y asociatividad en gramáticas libres de contexto.
 
 ---
 
-## Tabla Resumen
+## 9. Tabla Resumen
 
-| Gramática | Tipo Recursión | Asociatividad | Precedencia | Ambigua |
-| --------- | -------------- | ------------- | ----------- | ------- |
-| E → E + T | Izquierda      | Izquierda     | * > +       | No      |
-| E → T + E | Derecha        | Derecha       | * > +       | No      |
-| E → E + E | Mixta          | No definida   | No definida | Sí      |
+| Gramática | Recursión | Asociatividad | Precedencia | Ambigua |
+| --------- | --------- | ------------- | ----------- | ------- |
+| E → E + T | Izquierda | Izquierda     | * > +       | No      |
+| E → T + E | Derecha   | Derecha       | * > +       | No      |
+| E → E + E | Mixta     | No definida   | No definida | Sí      |
 
 ---
 
-## Autor
 
-Trabajo de Lenguajes de Programación y Transducción
-Ingeniería de Ciencias de la Computación e Inteligencia Artificial
-Semestre 7

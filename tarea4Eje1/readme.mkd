@@ -1,0 +1,37 @@
+# Parser LL(1)
+
+Calcula **FIRST**, **FOLLOW** y la **tabla de predicción** de una gramática libre de contexto.
+
+## Ejecución
+
+```bash
+python3 deriGramatical.py <archivo>.txt
+```
+
+Ejemplo:
+```bash
+python3 deriGramatical.py gGramatica1.txt
+```
+
+La salida se imprime en consola.
+
+## Formato del archivo de entrada
+
+```
+S -> A B uno
+A -> dos B | epsilon
+B -> C D | tres | epsilon
+```
+
+- Símbolo inicial: primer NT del archivo
+- Alternativas separadas por `|`
+- Producción vacía: `epsilon`
+- Símbolos separados por espacios
+
+## Qué hace
+
+1. **FIRST** — terminales con los que puede iniciar cada NT
+2. **FOLLOW** — terminales que pueden aparecer después de cada NT
+3. **Tabla de predicción** — mapea `[NT, terminal]` → producción a aplicar
+
+Si hay recursión izquierda o factores comunes, se listan los conflictos y la gramática **no es LL(1)**.

@@ -1,0 +1,4 @@
+S -> B uno | dos C | epsilon
+A -> S tres B C | cuatro | epsilon
+B -> A cinco C seis | epsilon
+C -> siete B | epsilon
